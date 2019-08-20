@@ -13,12 +13,13 @@ from matplotlib import pyplot as plt
 
 sourcefile = sys.argv[1]
 filename_base = os.path.splitext(sourcefile)[0]
-filename_compiled = filename_base + '.py'
+working_dir = os.path.dirname(os.path.realpath(__file__)) + '/'
+filename_compiled = working_dir + 'shadercompiled'
 
 def run_shader():
     print("Recompiling...")
-    call(['futhark', 'pyopencl', '--library', sourcefile, '-o', 'shadercompiled'])
-    print("Recompiled...")
+    call(['futhark', 'pyopencl', '--library', sourcefile, '-o', filename_compiled])
+    print("Recompiled")
 
     import shadercompiled
     importlib.reload(shadercompiled)
