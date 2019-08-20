@@ -11,18 +11,19 @@ import pyinotify
 import importlib
 from matplotlib import pyplot as plt
 
-filename = 'shader.fut' #sys.argv[1];
-# TODO: set up opencl
+sourcefile = sys.argv[1]
+filename_base = os.path.splitext(sourcefile)[0]
+filename_compiled = filename_base + '.py'
 
 def run_shader():
     print("Recompiling...")
-    call(['futhark', 'pyopencl', '--library', filename]);
+    call(['futhark', 'pyopencl', '--library', sourcefile, '-o', 'shadercompiled'])
     print("Recompiled...")
 
-    import shader
-    importlib.reload(shader)
+    import shadercompiled
+    importlib.reload(shadercompiled)
 
-    shader = shader.shader()
+    shader = shadercompiled.shadercompiled()
     img = shader.main(3).get()
     print("Execution complete")
 
@@ -31,21 +32,18 @@ def run_shader():
     plt.show()
     plt.pause(.001)
 
-def handler(signum, frame):
-    print ("File %s modified" % (filename,))
-
 class FileWatcher(pyinotify.ProcessEvent):
     def process_IN_MODIFY(self, event):
         run_shader()
 
 def main():
     run_shader()
-    wm = pyinotify.WatchManager()  # Watch Manager
+    wm = pyinotify.WatchManager()
     mask = pyinotify.IN_DELETE | pyinotify.IN_CREATE  | pyinotify.IN_MODIFY
 
     watcher = FileWatcher()
     notifier = pyinotify.Notifier(wm, watcher)
-    wdd = wm.add_watch(filename, mask, rec=True)
+    wdd = wm.add_watch(sourcefile, mask, rec=True)
 
     notifier.loop()
 
