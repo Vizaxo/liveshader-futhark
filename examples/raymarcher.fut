@@ -47,7 +47,7 @@ let ray rd ro : hit =
   let steps = 0
   let dist : f32 = -1
   let d : f32 = 1
-  let (_, dist, d, ro) : (i32, f32, f32, vec3) =
+  let (_, _, d, ro) : (i32, f32, f32, vec3) =
     loop (steps, dist, d, ro) while (steps < maxSteps && (dist == -1 || d >= epsilon)) do
     let d = sceneDist ro
     in if (d >= 0)
