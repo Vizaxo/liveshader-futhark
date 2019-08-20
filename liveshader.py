@@ -9,6 +9,7 @@ import os
 import signal
 import pyinotify
 import importlib
+from matplotlib import pyplot as plt
 
 filename = 'shader.fut' #sys.argv[1];
 # TODO: set up opencl
@@ -20,8 +21,13 @@ def run_shader():
     importlib.reload(shader)
 
     shader = shader.shader()
-    n = shader.main(3)
-    print(n[0][0])
+    img = shader.main(3)
+    #print(n)
+
+    plt.imshow(img, interpolation='nearest')
+    plt.ion()
+    plt.show()
+    plt.pause(.001)
 
 def handler(signum, frame):
     print ("File %s modified" % (filename,))
