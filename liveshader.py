@@ -20,10 +20,8 @@ def run_shader():
     importlib.reload(shader)
 
     shader = shader.shader()
-    n = shader.average(numpy.array([6.0, 4.0, 5.0]))
-    print(n)
-
-
+    n = shader.main(3)
+    print(n[0][0])
 
 def handler(signum, frame):
     print ("File %s modified" % (filename,))

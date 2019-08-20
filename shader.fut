@@ -1,1 +1,1 @@
-entry average (xs: []f64) = reduce (+) 0.0 xs / r64 (length xs)
+entry main (time:f64) : [256][512]f64 = replicate 256 (replicate 512 time)
