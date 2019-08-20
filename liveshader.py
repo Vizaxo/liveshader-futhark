@@ -15,6 +15,7 @@ filename = 'shader.fut' #sys.argv[1];
 # TODO: set up opencl
 
 def run_shader():
+    print("Recompiling...")
     call(['futhark', 'python', '--library', filename]);
 
     import shader
@@ -22,7 +23,7 @@ def run_shader():
 
     shader = shader.shader()
     img = shader.main(3)
-    #print(n)
+    print("Execution complete")
 
     plt.imshow(img, interpolation='nearest')
     plt.ion()
