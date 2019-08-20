@@ -76,5 +76,5 @@ let packCol ({x=r, y=g, z=b} : col3) : [3]u8 = map (u8.f32 <-< bounds 0 255 <-< 
 let canvas (y: i32) (x: i32) : [3]u8 =
   packCol <| (shader (-((f32.i32 y) / 256.0 - 0.5)) ((f32.i32 x) / 512.0 - 0.5))
 
-entry main (_: f32) : [256][512][3]u8 =
+entry main : [256][512][3]u8 =
   map (\x -> (map (canvas x) (iota 512))) (iota 256)

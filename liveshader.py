@@ -24,7 +24,7 @@ def run_shader():
     importlib.reload(shadercompiled)
 
     shader = shadercompiled.shadercompiled()
-    img = shader.main(3).get()
+    img = shader.main().get()
     print("Execution complete")
 
     plt.imshow(img, interpolation='nearest')
