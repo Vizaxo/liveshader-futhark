@@ -16,13 +16,14 @@ filename = 'shader.fut' #sys.argv[1];
 
 def run_shader():
     print("Recompiling...")
-    call(['futhark', 'python', '--library', filename]);
+    call(['futhark', 'pyopencl', '--library', filename]);
+    print("Recompiled...")
 
     import shader
     importlib.reload(shader)
 
     shader = shader.shader()
-    img = shader.main(3)
+    img = shader.main(3).get()
     print("Execution complete")
 
     plt.imshow(img, interpolation='nearest')

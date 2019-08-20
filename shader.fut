@@ -25,7 +25,7 @@ let min (x : f32) (y : f32) : f32 = if x < y then x else y
 let sceneDist (p : vec3) : f32 =
   foldr min f32.highest (map (getDist p) scene)
 
-let maxSteps : i32 = 100
+let maxSteps : i32 = 1000
 let epsilon : f32 = 0.01
 
 let getNorm p : vec3 =
@@ -74,7 +74,7 @@ let bounds lower upper x : f32 = if x < lower then lower else (if x > upper then
 let packCol ({x=r, y=g, z=b} : col3) : [3]u8 = map (u8.f32 <-< bounds 0 255 <-< (* 255)) [r, g, b]
 
 let canvas (y: i32) (x: i32) : [3]u8 =
-  packCol <| (shader (-((f32.i32 y) / 50.0 - 0.5)) ((f32.i32 x) / 80.0 - 0.5))
+  packCol <| (shader (-((f32.i32 y) / 256.0 - 0.5)) ((f32.i32 x) / 512.0 - 0.5))
 
-entry main (_: f32) : [50][80][3]u8 =
-  map (\x -> (map (canvas x) (iota 80))) (iota 50)
+entry main (_: f32) : [256][512][3]u8 =
+  map (\x -> (map (canvas x) (iota 512))) (iota 256)
