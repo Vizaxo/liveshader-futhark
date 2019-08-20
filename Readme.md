@@ -24,6 +24,8 @@ python3 liveshader.py input.fut
 
 This will output compiler output to the terminal, and open a window displaying the image. Whenever the source file is changed, it will recompile and redisplay the image.
 
+![](resources/screenshot.png)
+
 ## Dependencies
 
 - Futhark
