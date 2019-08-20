@@ -8,6 +8,7 @@ import fcntl
 import os
 import signal
 import pyinotify
+import importlib
 
 filename = 'shader.fut' #sys.argv[1];
 # TODO: set up opencl
@@ -16,6 +17,7 @@ def run_shader():
     call(['futhark', 'python', '--library', filename]);
 
     import shader
+    importlib.reload(shader)
 
     shader = shader.shader()
     n = shader.average(numpy.array([6.0, 4.0, 5.0]))
