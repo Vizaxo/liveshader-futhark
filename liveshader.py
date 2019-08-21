@@ -11,16 +11,20 @@ import pyinotify
 import importlib
 from matplotlib import pyplot as plt
 import cv2
+import tempfile
 
 sourcefile = sys.argv[2]
 filename_base = os.path.splitext(sourcefile)[0]
-working_dir = os.path.dirname(os.path.realpath(__file__)) + '/'
+og_wd = os.getcwd() + '/'
+sourcedir = os.path.dirname(og_wd + sourcefile) + '/'
+working_dir = tempfile.mkdtemp() + '/'
+os.chdir(working_dir)
 filename_compiled = working_dir + 'shadercompiled'
+sys.path.insert(1, working_dir)
 
 def run_shader():
     print("Recompiling...")
-    ret = call(['futhark', 'pyopencl', '--library', sourcefile, '-o', filename_compiled])
-    print("Recompiled")
+    ret = call(['futhark', 'pyopencl', '--library', og_wd + sourcefile, '-o', filename_compiled])
 
     if (ret == 0):
         print("Executing...")
@@ -32,7 +36,7 @@ def run_shader():
         print("Execution complete")
         return img
     else:
-        raise Exception('err')
+        raise Exception("Compilation error")
 
 def show_image(img):
     plt.imshow(img, interpolation='nearest')
@@ -44,8 +48,8 @@ def run_and_show():
     try:
         img = run_shader()
         show_image(img)
-    except:
-        print("Error")
+    except Exception as e:
+        print (e)
 
 
 class FileWatcher(pyinotify.ProcessEvent):
@@ -53,13 +57,14 @@ class FileWatcher(pyinotify.ProcessEvent):
         run_and_show()
 
 def write_image():
-    print("writing image " + filename_base + ".png")
+    image_name = sourcedir + filename_base + ".png"
+    print("writing image " + image_name)
     try:
         img = run_shader()
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-        cv2.imwrite(filename_base + '.png', img)
-    except:
-        print("Error")
+        cv2.imwrite(image_name, img)
+    except Exception as e:
+        print(e)
 
 def watch():
     run_and_show()
@@ -68,7 +73,7 @@ def watch():
 
     watcher = FileWatcher()
     notifier = pyinotify.Notifier(wm, watcher)
-    wdd = wm.add_watch(sourcefile, mask, rec=True)
+    wdd = wm.add_watch(sourcedir, mask, rec=True)
 
     notifier.loop()
 
