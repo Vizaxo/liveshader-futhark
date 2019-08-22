@@ -7,7 +7,6 @@ import time
 import fcntl
 import os
 import signal
-import pyinotify
 import importlib
 from matplotlib import pyplot as plt
 import cv2
@@ -51,10 +50,35 @@ def run_and_show():
     except Exception as e:
         print (e)
 
+if sys.platform.startswith('linux'):
+    import pyinotify
 
-class FileWatcher(pyinotify.ProcessEvent):
-    def process_IN_MODIFY(self, event):
-        run_and_show()
+    class FileWatcher(pyinotify.ProcessEvent):
+        def process_IN_MODIFY(self, event):
+            run_and_show()
+
+    def make_notifier():
+        wm = pyinotify.WatchManager()
+        mask = pyinotify.IN_DELETE | pyinotify.IN_CREATE  | pyinotify.IN_MODIFY
+
+        watcher = FileWatcher()
+        notifier = pyinotify.Notifier(wm, watcher)
+        wdd = wm.add_watch(sourcedir, mask, rec=True)
+        return notifier
+
+else:
+    class TimerNotifier():
+        def __init__(self):
+            self.mtime = os.path.getmtime(og_wd + sourcefile)
+        def loop(self):
+            while True:
+                if os.path.getmtime(og_wd + sourcefile) > self.mtime:
+                    self.mtime = os.path.getmtime(og_wd + sourcefile)
+                    run_and_show()
+                time.sleep(0.5)
+
+    def make_notifier():
+        return TimerNotifier()
 
 def write_image():
     image_name = sourcedir + filename_base + ".png"
@@ -68,12 +92,8 @@ def write_image():
 
 def watch():
     run_and_show()
-    wm = pyinotify.WatchManager()
-    mask = pyinotify.IN_DELETE | pyinotify.IN_CREATE  | pyinotify.IN_MODIFY
 
-    watcher = FileWatcher()
-    notifier = pyinotify.Notifier(wm, watcher)
-    wdd = wm.add_watch(sourcedir, mask, rec=True)
+    notifier = make_notifier()
 
     notifier.loop()
 
