@@ -2,7 +2,7 @@
 
 Automatically run Futhark code to generate and display an image. Every time the Futhark file is saved, it will be recompiled, run, and displayed as image output.
 
-This is similar to (Shadertoy)[https://www.shadertoy.com/], but using Futhark and OpenCL instead of GLSL and WebGL.
+This is similar to [Shadertoy](https://www.shadertoy.com/), but using Futhark and OpenCL instead of GLSL and WebGL.
 
 ## Usage
 
