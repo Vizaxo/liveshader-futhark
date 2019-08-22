@@ -35,3 +35,13 @@ This will output compiler output to the terminal, and open a window displaying t
   - pyinotify
   - numpy
   - matplotlib
+
+## License and contributions
+
+This project is licenced under the [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html).
+
+Contributions are welcomed and appreciated.
+
+When submitting a pull request, you must ensure that all code is either owned by you, or is licened under a GPLv3-compatible licence and you have followed the terms of the licence (including any necessary attribution). By submitting a pull request, you consent for any code owned by you to be licenced under the GNU GPLv3.
+
+If you are unsure of any licencing details, please submit the pull requst but indicate that the licencing is not complete, so we can work out the details.
